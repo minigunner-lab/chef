@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ASCII Escape Decoder 😩💻</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif; /* cause you deserve pain */
+      background: #0d0d0d;
+      color: #00ff88;
+      text-align: center;
+      padding: 2rem;
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 1rem;
+      font-size: 1.2rem;
+      background: #222;
+      color: #0f0;
+      border: 1px solid #0f0;
+    }
+    .result {
+      font-size: 2rem;
+      margin-top: 2rem;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ASCII Escape Sequence Decoder 🔓🧠</h1>
+
+  <!-- user types in some messed up digits here -->
+  <input type="text" id="asciiInput" placeholder="Enter comma-separated ASCII (e.g. 105,102)">
+  
+  <!-- button that unleashes the JavaScript beast -->
+  <button onclick="decodeASCII()">Decode This Shit 🔍</button>
+
+  <!-- where the results vomit out -->
+  <div class="result" id="outputArea">👾 Waiting for numbers like 69, nice.</div>
+
+  <script>
+    function decodeASCII() {
+      // grab that cursed input from the user
+      let input = document.getElementById("asciiInput").value;
+
+      // split it by commas because humans don’t know how to separate stuff
+      let parts = input.split(",");
+
+      // hold the final decoded cringe
+      let result = "";
+
+      // loop through the numbers like you're looping through your ex's red flags
+      for (let i = 0; i < parts.length; i++) {
+
+        // grab each part and trim the whitespace, cause some of y'all sloppy af
+        let num = parts[i].trim();
+
+        // check if it’s actually a number or if user typed some TikTok brainrot
+        if (!isNaN(num) && num !== "") {
+          // convert that trash into a letter using String.fromCharCode
+          result += String.fromCharCode(parseInt(num));
+        } else {
+          // if it's not a number, throw a fit and add a ? to mark their sins
+          result += "?";
+        }
+      }
+
+      // finally show the result like it’s your OnlyFans password
+      document.getElementById("outputArea").innerText = result;
+    }
+  </script>
+
+</body>
+</html>
