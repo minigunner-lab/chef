@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>INSANE HUGE PRIME GENERATOR - INFINITE MODE</title>
+<style>
+  body {
+    background: #111;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    padding: 1rem;
+    text-align: center;
+  }
+  button {
+    font-size: 1.3rem;
+    padding: 1rem 2rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    background: #0f0;
+    color: #000;
+    border: none;
+    font-weight: bold;
+  }
+  input {
+    font-size: 1.2rem;
+    padding: 0.3rem;
+    width: 100px;
+    text-align: center;
+  }
+  #output {
+    margin-top: 1.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 90vw;
+    font-size: 1rem;
+    text-align: left;
+    background: #222;
+    padding: 1rem;
+    border-radius: 8px;
+    height: 300px;
+    overflow-y: scroll;
+  }
+</style>
+</head>
+<body>
+  <h1>💥 INSANE HUGE PRIME GENERATOR - INFINITE MODE 💥</h1>
+  <p>Enter digits (NO LIMITS! But beware your PC will hate you)</p>
+  <input id="digits" type="number" value="100" min="1" />
+  <br />
+  <button id="gen">FIND ME PRIMES FOREVER</button>
+  <div id="output">Waiting for prime apocalypse infinite mode...</div>
+
+<script>
+function modPow(base, exponent, modulus) {
+  if (modulus === 1n) return 0n;
+  let result = 1n;
+  let b = BigInt(base);
+  let e = BigInt(exponent);
+  let m = BigInt(modulus);
+  b = b % m;
+  while (e > 0n) {
+    if (e % 2n === 1n) result = (result * b) % m;
+    e = e / 2n;
+    b = (b * b) % m;
+  }
+  return result;
+}
+
+function isPrime(n, k = 10) {
+  if (n < 2n) return false;
+  if (n === 2n || n === 3n) return true;
+  if (n % 2n === 0n) return false;
+
+  let r = 0n;
+  let d = n - 1n;
+  while (d % 2n === 0n) {
+    d /= 2n;
+    r += 1n;
+  }
+
+  WitnessLoop:
+  for (let i = 0; i < k; i++) {
+    const a = 2n + BigInt(Math.floor(Math.random() * Number(n - 4n)));
+    let x = modPow(a, d, n);
+    if (x === 1n || x === n - 1n) continue;
+    for (let j = 0n; j < r - 1n; j++) {
+      x = modPow(x, 2n, n);
+      if (x === n - 1n) continue WitnessLoop;
+    }
+    return false;
+  }
+  return true;
+}
+
+function randomBigInt(digits) {
+  let str = '';
+  str += Math.floor(Math.random() * 9) + 1;
+  for (let i = 1; i < digits; i++) {
+    str += Math.floor(Math.random() * 10);
+  }
+  return BigInt(str);
+}
+
+// Open a new window for full log output
+let logWindow = null;
+
+document.getElementById('gen').addEventListener('click', async () => {
+  const output = document.getElementById('output');
+  let digits = parseInt(document.getElementById('digits').value);
+
+  if (isNaN(digits) || digits < 1) {
+    output.textContent = "Bruh, enter a valid digit count greater than 0.";
+    return;
+  }
+
+  if (logWindow && !logWindow.closed) {
+    logWindow.close();
+  }
+
+  logWindow = window.open("", "primeLog", "width=800,height=600,scrollbars=yes,resizable=yes");
+  logWindow.document.title = "🔥 Prime Generator Log - FULL PRIMES 🔥";
+  logWindow.document.body.style.background = "#111";
+  logWindow.document.body.style.color = "#0f0";
+  logWindow.document.body.style.fontFamily = "'Courier New', monospace";
+  logWindow.document.body.style.whiteSpace = "pre-wrap";
+  logWindow.document.body.style.padding = "1rem";
+
+  output.textContent = "Starting infinite prime apocalypse mode... CTRL+C when you wanna stop (good luck).";
+  logWindow.document.body.textContent = "🔥 Prime generator infinite log started 🔥\n\n";
+
+  let count = 0;
+
+  while (true) {
+    count++;
+    let candidate = randomBigInt(digits);
+    if (candidate % 2n === 0n) candidate += 1n;
+
+    output.textContent = `Trying candidate #${count}:\n${candidate.toString()}`;
+
+    if (isPrime(candidate)) {
+      output.textContent = `💥 PRIME FOUND #${count} 💥\n\n${candidate.toString()}`;
+      logWindow.document.body.textContent += `💥 PRIME FOUND #${count} 💥\n${candidate.toString()}\n\n`;
+      // You can remove break to keep going forever
+      // break;
+    }
+
+    // Yield to UI so browser doesn't freeze completely
+    await new Promise(r => setTimeout(r, 0));
+  }
+});
+</script>
+</body>
+</html>
