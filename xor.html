@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XOR OBLITERATOR 9000™</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+    }
+    input, textarea, button {
+      background: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 24px;
+      text-shadow: 0 0 5px #0f0;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💀 XOR OBLITERATOR 9000™ 💀</h1>
+
+  <label>🔑 Your cursed key (aka the secret sauce):</label>
+  <input type="text" id="key" placeholder="example: skidnation">
+
+  <label>💬 Message or \\xHex (choose your fighter):</label>
+  <textarea id="message" placeholder="Put your message or \\x48\\x65\\x6c\\x6c\\x6f here..."></textarea>
+
+  <div class="buttons">
+    <button onclick="encrypt()">🔐 Encrypt to \\xHELL</button>
+    <button onclick="decrypt()">🔓 Decrypt from \\xHELL</button>
+  </div>
+
+  <label>📤 Output (copy this unholy mess):</label>
+  <textarea id="output" readonly></textarea>
+
+  <script>
+    // XOR encode text and convert it to \xAA-style hex
+    function xorToXFormat(text, key) {
+      let result = '';
+      for (let i = 0; i < text.length; i++) {
+        const xorByte = text.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+        result += '\\x' + xorByte.toString(16).padStart(2, '0');
+      }
+      return result;
+    }
+
+    // Take that \xAA string and decrypt it via XOR
+    function xFormatToXor(xstr, key) {
+      const matches = xstr.match(/\\x[0-9a-fA-F]{2}/g);
+      if (!matches) throw new Error("WHAT DID YOU FEED ME?! That ain't even valid \\xHex.");
+      let result = '';
+      for (let i = 0; i < matches.length; i++) {
+        const hexByte = parseInt(matches[i].slice(2), 16);
+        const xorChar = String.fromCharCode(hexByte ^ key.charCodeAt(i % key.length));
+        result += xorChar;
+      }
+      return result;
+    }
+
+    function encrypt() {
+      const msg = document.getElementById('message').value;
+      const key = document.getElementById('key').value;
+
+      if (!key) {
+        alert("BRO. You forgot the key. AGAIN?");
+        return;
+      }
+
+      const output = xorToXFormat(msg, key);
+      document.getElementById('output').value = output;
+    }
+
+    function decrypt() {
+      const msg = document.getElementById('message').value;
+      const key = document.getElementById('key').value;
+
+      if (!key) {
+        alert("Trying to decrypt without a key? What are you, a wizard?");
+        return;
+      }
+
+      try {
+        const output = xFormatToXor(msg, key);
+        document.getElementById('output').value = output;
+      } catch (err) {
+        alert("💥 ERROR: Invalid \\x input. You tryna blow up the page?");
+      }
+    }
+  </script>
+
+</body>
+</html>
