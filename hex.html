@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ASCII → Hex Escape Sequence Encoder</title>
+<style>
+  /* Styling this ugly duckling so it looks slightly less like a dumpster fire */
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  textarea, input, button {
+    font-family: monospace;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+  }
+  textarea {
+    width: 300px;
+    height: 100px;
+    resize: none;
+    background: #222;
+    color: #eee;
+  }
+  button {
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  #output {
+    margin-top: 1rem;
+    background: #333;
+    padding: 1rem;
+    width: 320px;
+    word-break: break-all;
+    border-radius: 5px;
+    user-select: all; /* so you can copy the damn thing easy */
+  }
+</style>
+</head>
+<body>
+
+<h1>ASCII → Hex Escape Sequence Encoder</h1>
+
+<!-- Input box where you dump your boring ASCII -->
+<textarea id="input" placeholder="Type some dumb ASCII here..."></textarea>
+
+<!-- The magic button that does the converting so you don't have to -->
+<button id="encodeBtn">Encode to Hex Escapes</button>
+
+<!-- Output box where the hex flex happens -->
+<pre id="output"></pre>
+
+<script>
+  // Grab your tools for this sh*tshow
+  const input = document.getElementById('input')
+  const output = document.getElementById('output')
+  const encodeBtn = document.getElementById('encodeBtn')
+
+  // The totally serious function that converts ASCII to hex escapes, cuz we ain't playing around
+  function asciiToHexEscape(str) {
+    let result = '' // This is the sh*t that stores your hex flex
+
+    for (let i = 0; i < str.length; i++) {
+      // Get ASCII code of char number i (the secret number behind the letter)
+      const asciiCode = str.charCodeAt(i)
+      
+      // Convert ASCII code to uppercase hex (because lowercase is for peasants)
+      const hex = asciiCode.toString(16).toUpperCase()
+
+      // Pad that hex to 2 digits like a classy mofo (so 4 becomes 04)
+      const paddedHex = hex.length === 1 ? '0' + hex : hex
+
+      // Add the escape sequence to the result (aka \x??)
+      result += '\\x' + paddedHex
+    }
+    
+    return result
+  }
+
+  // Button click event — when you wanna turn your ASCII into hex magic
+  encodeBtn.addEventListener('click', () => {
+    const text = input.value // Get whatever nonsense you typed
+    const encoded = asciiToHexEscape(text) // Turn it into hex code like a wizard
+    output.textContent = encoded // Show off the results so everyone can see how cool you are
+  })
+</script>
+
+</body>
+</html>
